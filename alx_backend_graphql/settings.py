@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # THIRD-PARTY APPS
     "graphene_django",
+    "django_filters",
 
     # LOCAL APPS
     'crm.apps.CrmConfig',
