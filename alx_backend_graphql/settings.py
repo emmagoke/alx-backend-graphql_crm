@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_filters",
     'corsheaders',
     'django_crontab',
+    'django_celery_beat',
 
     # LOCAL APPS
     'crm.apps.CrmConfig',

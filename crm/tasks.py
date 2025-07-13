@@ -7,12 +7,12 @@ from gql.transport.requests import RequestsHTTPTransport
 logger = logging.getLogger(__name__)
 
 @shared_task
-def generate_crm_report():
+def generatecrmreport():
     """
     A Celery task that generates a weekly CRM report by querying the
     GraphQL endpoint and logging the results to a file.
     """
-    log_file_path = "/tmp/crm_report_log.txt"
+    log_file_path = "/tmp/crmreportlog.txt" # Corrected log file name
     graphql_url = "http://localhost:8000/graphql"
     logger.info("Starting CRM report generation task...")
 
