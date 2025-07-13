@@ -1,16 +1,19 @@
 import datetime
 import logging
-import requests
-import json
+from gql import gql, Client
+from gql.transport.requests import RequestsHTTPTransport, log as gql_log
 
 # It's good practice to use a logger instead of print in cron jobs
 logger = logging.getLogger(__name__)
+
+# Suppress noisy gql transport logs for simple heartbeat
+gql_log.setLevel(logging.WARNING)
 
 def log_crm_heartbeat():
     """
     A cron job function that logs a heartbeat message to a file
     to confirm the CRM application is alive and running.
-    Optionally, it also pings the GraphQL endpoint.
+    It also pings the GraphQL endpoint's 'hello' field.
     """
     log_file_path = "/tmp/crm_heartbeat_log.txt"
     graphql_url = "http://localhost:8000/graphql"
@@ -20,22 +23,25 @@ def log_crm_heartbeat():
     timestamp = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
     log_message = f"{timestamp} CRM is alive"
 
-    # 2. Optionally, check if the GraphQL endpoint is responsive
+    # 2. Check if the GraphQL endpoint is responsive using gql
     try:
-        # A simple query to the 'hello' field
-        query = {"query": "query { hello }"}
-        response = requests.post(graphql_url, json=query, timeout=10)
+        # Setup a temporary transport and client for the check
+        transport = RequestsHTTPTransport(url=graphql_url, timeout=10)
+        client = Client(transport=transport, fetch_schema_from_transport=False)
         
-        # Check for a successful HTTP status code and a valid GraphQL response
-        if response.status_code == 200 and 'data' in response.json():
+        # Define and execute a simple query to the 'hello' field
+        hello_query = gql("query { hello }")
+        result = client.execute(hello_query)
+        
+        # Check for a valid GraphQL response
+        if result and 'hello' in result:
             log_message += " (GraphQL endpoint is responsive)."
         else:
-            error_data = response.text
-            log_message += f" (GraphQL endpoint check failed with status {response.status_code}: {error_data})."
-            logger.warning(f"GraphQL heartbeat check failed: {error_data}")
+            log_message += f" (GraphQL endpoint check failed: Unexpected response {result})."
+            logger.warning(f"GraphQL heartbeat check failed: {result}")
 
-    except requests.exceptions.RequestException as e:
-        log_message += f" (GraphQL endpoint is unreachable: {e})."
+    except Exception as e:
+        log_message += f" (GraphQL endpoint is unreachable or query failed: {e})."
         logger.error(f"Could not connect to GraphQL endpoint for heartbeat check: {e}")
 
     # 3. Append the final message to the log file
