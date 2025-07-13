@@ -13,8 +13,9 @@ LOG_FILE="/tmp/customer_cleanup_log.txt"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# Change to project directory
+# Change to project directory and store current working directory
 cd "$PROJECT_ROOT"
+cwd=$(pwd)
 
 # Execute Django management command to delete inactive customers
 # This command deletes customers with no orders since a year ago
