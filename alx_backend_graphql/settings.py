@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     # THIRD-PARTY APPS
     "graphene_django",
     "django_filters",
+    'corsheaders',
+    'django_crontab',
 
     # LOCAL APPS
     'crm.apps.CrmConfig',
@@ -132,3 +134,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GRAPHENE = {
     "SCHEMA": "alx_backend_graphql.schema.schema"
 }
+
+
+# DJANGO-CRONTAB CONFIGURATION
+# This setting defines all the cron jobs for the project.
+CRONJOBS = [
+    # ('schedule', 'path.to.cron.function', 'optional-cron-job-name')
+    ('*/5 * * * *', 'crm.cron.log_crm_heartbeat'),
+]
