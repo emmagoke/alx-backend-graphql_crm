@@ -8,11 +8,14 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
 colorama==0.4.6
+cron-descriptor==1.4.5
 Django==5.2.1
+django-celery-beat==2.8.1
 django-cors-headers==4.7.0
 django-crontab==0.7.1
 django-environ==0.12.0
 django-filter==25.1
+django-timezone-field==7.1
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-yasg==1.21.10
@@ -30,9 +33,11 @@ plotly==5.16.1
 promise==2.3
 prompt_toolkit==3.0.51
 PyJWT==2.9.0
+python-crontab==3.3.0
 python-dateutil==2.9.0.post0
 pytz==2025.2
 PyYAML==6.0.2
+redis==6.2.0
 six==1.17.0
 sqlparse==0.5.3
 tenacity==8.2.3
